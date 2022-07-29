@@ -8,7 +8,7 @@ namespace EventStreamProcessing.Models
     {
         public Sensor Sensor { get; set; }
 
-        public DateTime EnqueuedTime { get; set; }
+        public DateTimeOffset EnqueuedTime { get; set; }
 
         public DateTime ProcessedTime { get; set; }
 

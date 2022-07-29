@@ -9,20 +9,25 @@ using System.Xml.XPath;
 using EventStreamProcessing.Helpers;
 using EventStreamProcessing.Helpers.Extensions;
 using EventStreamProcessing.Models;
-using Microsoft.Azure.EventHubs;
+// using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace EventStreamProcessing.Core {
-    public class Transformer {
+namespace EventStreamProcessing.Core
+{
+    public class Transformer
+    {
         private ILogger _log;
 
-        public Transformer(ILogger log) {
-            _log = log;    
+        public Transformer(ILogger log)
+        {
+            _log = log;
         }
 
-        public async Task Transform(EventData[] inputMessages, string partitionId, IAsyncCollector<SensorDataRecord> outputMessages) {
+        public async Task Transform(EventData[] inputMessages, string partitionId, IAsyncCollector<SensorDataRecord> outputMessages)
+        {
             // Initialize variables
             var outputMessageCount = 0;
 
@@ -34,9 +39,11 @@ namespace EventStreamProcessing.Core {
                 try
                 {
                     // Get messageBody details
-                    var messageBody = Encoding.UTF8.GetString(message.Body.Array,
-                                                          message.Body.Offset,
-                                                          message.Body.Count);
+                    //var messageBody = Encoding.UTF8.GetString(message.Body.Array,
+                    //                                      message.Body.Offset,
+                    //                                      message.Body.Count);
+
+                    var messageBody = message.EventBody.ToString();
 
                     // Convert message body from XML string to object
                     var sensorDataObject = Conversion.ConvertXmlToSensorDataObject(messageBody);
@@ -49,7 +56,7 @@ namespace EventStreamProcessing.Core {
                     // of messages with missing sensor details
                     if (String.IsNullOrWhiteSpace(sensorDataObject?.Value))
                     {
-                        throw new ArgumentNullException($"Sensor value missing for partitionId={partitionId}, offset={message.SystemProperties.Offset}");
+                        throw new ArgumentNullException($"Sensor value missing for partitionId={partitionId}, offset={message.Offset /*SystemProperties.Offset*/}");
                     }
 
                     // Create record to be entered into database
@@ -57,7 +64,7 @@ namespace EventStreamProcessing.Core {
                     SensorDataRecord dataRecord = new SensorDataRecord()
                     {
                         Sensor = sensorDataObject,
-                        EnqueuedTime = message.SystemProperties.EnqueuedTimeUtc,
+                        EnqueuedTime = message.EnqueuedTime /*SystemProperties.EnqueuedTimeUtc*/,
                         ProcessedTime = processedTime,
                         RowKey = Guid.NewGuid().ToString(),
                         PartitionKey = sensorDataObject.Id

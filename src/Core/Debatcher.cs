@@ -6,22 +6,27 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Microsoft.Azure.EventHubs;
+// using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using EventStreamProcessing.Helpers.Extensions;
 using EventStreamProcessing.Helpers;
 using System.Collections.Generic;
 
-namespace EventStreamProcessing.Core {
-    public class Debatcher {
+namespace EventStreamProcessing.Core
+{
+    public class Debatcher
+    {
         private ILogger _log;
 
-        public Debatcher(ILogger log) {
-            _log = log;    
+        public Debatcher(ILogger log)
+        {
+            _log = log;
         }
 
-        public EventData[] Debatch(EventData[] inputMessages, string partitionId) {
+        public EventData[] Debatch(EventData[] inputMessages, string partitionId)
+        {
             _log.LogBatchSize("DebatchingFunction", inputMessages.Length);
 
             List<EventData> outputMessages = new List<EventData>();
@@ -30,9 +35,11 @@ namespace EventStreamProcessing.Core {
             {
                 try
                 {
-                    var messageBody = Encoding.UTF8.GetString(message.Body.Array,
-                                                              message.Body.Offset,
-                                                              message.Body.Count);
+                    //var messageBody = Encoding.UTF8.GetString(message.Body.Array,
+                    //                                          message.Body.Offset,
+                    //                                          message.Body.Count);
+
+                    var messageBody = message.EventBody.ToString();
 
                     var messageXml = XDocument.Parse(messageBody);
                     var sensorType = Environment.GetEnvironmentVariable("SENSOR_TYPE");
@@ -52,10 +59,12 @@ namespace EventStreamProcessing.Core {
 
                             outputMessage.Properties.Add("InputEH_EnqueuedTimeUtc",
                                 message.SystemProperties["x-opt-enqueued-time"]);
-                            outputMessage.SystemProperties = message.SystemProperties;
+
+                            // TODO: What to do?
+                            //outputMessage.SystemProperties = message.SystemProperties;
                             // Add output message and increment count
                             outputMessages.Add(outputMessage);
-                            
+
                             // Log success
                             _log.LogEventProcessed(partitionId, message);
                         }

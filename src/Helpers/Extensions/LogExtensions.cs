@@ -1,5 +1,6 @@
 using System;
-using Microsoft.Azure.EventHubs;
+//using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
 using Microsoft.Extensions.Logging;
 
 namespace EventStreamProcessing.Helpers.Extensions
@@ -13,14 +14,16 @@ namespace EventStreamProcessing.Helpers.Extensions
 
         public static void LogEventProcessed(this ILogger logger, string partitionId, EventData message){
             var processedTime = DateTime.UtcNow;
-            var enqueuedTimeUtc = message.SystemProperties.EnqueuedTimeUtc;
+            //var enqueuedTimeUtc = message.SystemProperties.EnqueuedTimeUtc;
+            var enqueuedTimeUtc = message.EnqueuedTime;
             var debatchingLatencyInMs = TimeCalculations.GetLatency(enqueuedTimeUtc, processedTime);
 
             logger.LogInformation("DebatchingFunction: Processed message with partitionId={partitionId}, " +
                 "offset={offset}, processedTime={processedTime} enqueuedTimeUtc={enqueuedTimeUtc}, " +
                 "debatchingLatencyInMs={debatchingLatencyInMs}",
                 partitionId,
-                message.SystemProperties.Offset,
+                /*message.SystemProperties.Offset,*/
+                message.Offset,
                 processedTime,
                 enqueuedTimeUtc,
                 debatchingLatencyInMs
@@ -29,7 +32,7 @@ namespace EventStreamProcessing.Helpers.Extensions
 
         public static void LogSensorProcessed(this ILogger logger, string sensorDataJson, string partitionId, DateTime processedTime, EventData message)
         {
-            var enqueuedTimeUtc = message.SystemProperties.EnqueuedTimeUtc;
+            var enqueuedTimeUtc = message.EnqueuedTime /*SystemProperties.EnqueuedTimeUtc*/;
             DateTime inputEH_enqueuedTime = (DateTime)message.Properties["InputEH_EnqueuedTimeUtc"];
 
             var transformingLatencyInMs = TimeCalculations.GetLatency(enqueuedTimeUtc, processedTime);
@@ -41,7 +44,7 @@ namespace EventStreamProcessing.Helpers.Extensions
                 "transformingLatencyInMs={transformingLatencyInMs}, processingLatencyInMs={processingLatencyInMs}",
                 sensorDataJson,
                 partitionId,
-                message.SystemProperties.Offset,
+                message./*SystemProperties.*/Offset,
                 enqueuedTimeUtc,
                 inputEH_enqueuedTime,
                 processedTime,
@@ -54,7 +57,7 @@ namespace EventStreamProcessing.Helpers.Extensions
             message.Properties.Add("error", exc?.Message);
             message.Properties.Add("stacktrace", exc?.StackTrace);
 
-            logger.LogError(exc, $"{functionName}: Failed processing message with partitionId={partitionId}, offset={message.SystemProperties.Offset}");
+            logger.LogError(exc, $"{functionName}: Failed processing message with partitionId={partitionId}, offset={message./*SystemProperties.*/Offset}");
         }
 
         public static void LogProcessingComplete(this ILogger logger, string functionName, int originalMessageCount, int successfulMessageCount, string partitionId)

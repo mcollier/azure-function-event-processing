@@ -1,24 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <RootNamespace>EventStreamProcessing.Functions</RootNamespace>
-    <UserSecretsId>026f3d7d-a4de-4f2b-b26e-ed292429a8be</UserSecretsId>
+    <!-- <UserSecretsId>026f3d7d-a4de-4f2b-b26e-ed292429a8be</UserSecretsId> -->
     <AssemblyName>EventStreamProcessing.Functions</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Functions\obj\**" />
+    <Compile Remove="tests\**" />
     <EmbeddedResource Remove="Functions\obj\**" />
+    <EmbeddedResource Remove="tests\**" />
     <None Remove="Functions\obj\**" />
+    <None Remove="tests\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="5.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.4" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.13" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
