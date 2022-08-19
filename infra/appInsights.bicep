@@ -1,27 +1,31 @@
-param location string = resourceGroup().location
-param appInsightsName string
-param logAnalyticsId string
-param tags object = {}
+// param location string = resourceGroup().location
+// param appInsightsName string
+// param logAnalyticsId string
+// param tags object = {}
 
+param resourceToken string
+param location string
+param tags object
+param workspaceId string
 
+var abbrs = loadJsonContent('abbreviations.json')
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
-  name: appInsightsName
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: '${abbrs.insightsComponents}${resourceToken}'
   location: location
   tags: tags
   kind: 'web'
-  properties:{
-    Application_Type:'web'
-    WorkspaceResourceId: logAnalyticsId
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: workspaceId
   }
 }
-
 
 resource appInsightsDiagnosticSettings 'microsoft.insights/diagnosticSettings@2017-05-01-preview' = {
   name: 'Send_To_LogAnalytics'
   scope: appInsights
   properties: {
-    workspaceId: logAnalyticsId
+    workspaceId: workspaceId
     logs: [
       {
         category: 'AppAvailabilityResults'
@@ -76,7 +80,6 @@ resource appInsightsDiagnosticSettings 'microsoft.insights/diagnosticSettings@20
     ]
   }
 }
-
 
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output appInsightsIngestionEndpoiont string = appInsights.properties.publicNetworkAccessForIngestion

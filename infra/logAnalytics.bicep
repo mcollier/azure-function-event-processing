@@ -1,9 +1,11 @@
-param location string = resourceGroup().location
-param logAnalyticsName string
-param tags object = {}
+param resourceToken string
+param location string
+param tags object
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2020-10-01'={
-  name: logAnalyticsName
+var abbrs = loadJsonContent('abbreviations.json')
+
+resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2020-10-01' = {
+  name: '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
   location: location
   tags: tags
 }
