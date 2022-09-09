@@ -3,6 +3,6 @@
 name: azure-function-event-processing
 services:
   azure-function-event-processing:
-    project: .
+    project: src
     language: dotnet
     host: function
