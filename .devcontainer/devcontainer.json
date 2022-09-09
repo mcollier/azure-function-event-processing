@@ -10,7 +10,7 @@
 	},
 	"features": {
 		"github-cli": "2",
-		"azure-cli": "2.38",
+		"azure-cli": "2.40",
 		"dotnet": "6.0",
 		"docker-from-docker": "20.10"
 	},
@@ -35,7 +35,7 @@
 		7071
 	],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "dotnet restore && cp /workspaces/azure-function-event-processing/src/sample.settings.json /workspaces/azure-function-event-processing/src/local.settings.json",
+	"postCreateCommand": "dotnet restore ./src/EventStreamProcessing.csproj && cp /workspaces/azure-function-event-processing/src/sample.settings.json /workspaces/azure-function-event-processing/src/local.settings.json",
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }
