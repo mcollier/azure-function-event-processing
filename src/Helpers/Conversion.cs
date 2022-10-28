@@ -4,16 +4,24 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using EventStreamProcessing.Models;
 
-namespace EventStreamProcessing.Helpers {
-    public static class Conversion {
-        public static string ConvertXmlToString(XElement xml) {
-            var xmlWriter = new StringWriter();
-            xml.WriteTo(new XmlTextWriter(xmlWriter));
-            
-            return xmlWriter.ToString();
+namespace EventStreamProcessing.Helpers
+{
+    public static class Conversion
+    {
+        public static string ConvertXmlToString(XElement xml)
+        {
+            string xmlString;
+            using (var xmlWriter = new StringWriter())
+            {
+                xml.WriteTo(new XmlTextWriter(xmlWriter));
+                xmlString = xmlWriter.ToString();
+            }
+
+            return xmlString;
         }
 
-        public static Sensor ConvertXmlToSensorDataObject(string messageBody) {
+        public static Sensor ConvertXmlToSensorDataObject(string messageBody)
+        {
             Sensor sensorDataObject;
             var xmlSerializer = new XmlSerializer(typeof(Sensor));
 

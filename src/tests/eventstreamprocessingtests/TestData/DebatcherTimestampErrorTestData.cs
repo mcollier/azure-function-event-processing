@@ -1,8 +1,8 @@
+using EventStreamProcessingTests.TestHelpers;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using EventStreamProcessingTests.TestHelpers;
-using EventStreamProcessing.Models;
 
 namespace EventStreamProcessingTests.TestData
 {

@@ -1,18 +1,16 @@
+using Azure.Messaging.EventHubs;
+
+using EventStreamProcessing.Helpers;
+using EventStreamProcessing.Helpers.Extensions;
+
+using Microsoft.Extensions.Logging;
+
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-// using Microsoft.Azure.EventHubs;
-using Azure.Messaging.EventHubs;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.Logging;
-using EventStreamProcessing.Helpers.Extensions;
-using EventStreamProcessing.Helpers;
-using System.Collections.Generic;
 
 namespace EventStreamProcessing.Core
 {
@@ -27,22 +25,19 @@ namespace EventStreamProcessing.Core
 
         public EventData[] Debatch(EventData[] inputMessages, string partitionId)
         {
+            var sensorType = Environment.GetEnvironmentVariable("SENSOR_TYPE");
+
             _log.LogBatchSize("DebatchingFunction", inputMessages.Length);
 
-            List<EventData> outputMessages = new List<EventData>();
+            List<EventData> outputMessages = new();
 
             foreach (EventData message in inputMessages)
             {
                 try
                 {
-                    //var messageBody = Encoding.UTF8.GetString(message.Body.Array,
-                    //                                          message.Body.Offset,
-                    //                                          message.Body.Count);
-
                     var messageBody = message.EventBody.ToString();
 
                     var messageXml = XDocument.Parse(messageBody);
-                    var sensorType = Environment.GetEnvironmentVariable("SENSOR_TYPE");
                     var sensors = messageXml.XPathSelectElements($"//devices/sensor[starts-with(@type, '{sensorType}')]");
 
                     if (!sensors.Any())
@@ -54,11 +49,12 @@ namespace EventStreamProcessing.Core
                     {
                         foreach (XElement sensor in sensors)
                         {
-                            var outputMessage = new EventData(Encoding.UTF8.GetBytes(
-                                                    Conversion.ConvertXmlToString(sensor)));
+                            var outputMessage = new EventData(Encoding.UTF8.GetBytes(Conversion.ConvertXmlToString(sensor)));
 
-                            outputMessage.Properties.Add("InputEH_EnqueuedTimeUtc",
-                                message.SystemProperties["x-opt-enqueued-time"]);
+                            if (message.SystemProperties.ContainsKey("x-opt-enqueued-time"))
+                            {
+                                outputMessage.Properties.Add("InputEH_EnqueuedTimeUtc", message.SystemProperties["x-opt-enqueued-time"]);
+                            }
 
                             // TODO: What to do?
                             //outputMessage.SystemProperties = message.SystemProperties;

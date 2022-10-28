@@ -1,14 +1,8 @@
 using EventStreamProcessing.Helpers;
-using EventStreamProcessing.Models;
-using Microsoft.Azure.EventHubs;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System;
-using System.Text;
-using System.Linq;
-using Xunit;
-using EventStreamProcessing.Core;
+
 using System.Xml.Linq;
+
+using Xunit;
 
 namespace EventStreamProcessingTests.Helpers
 {

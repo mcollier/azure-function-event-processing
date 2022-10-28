@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStreamProcessing", "EventStreamProcessing.csproj", "{289950B9-603B-4B7B-A088-034F6C186D45}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStreamProcessingTests", "tests\eventstreamprocessingtests\EventStreamProcessingTests.csproj", "{7289404A-25C3-48B9-8758-53F492B4A9AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{289950B9-603B-4B7B-A088-034F6C186D45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{289950B9-603B-4B7B-A088-034F6C186D45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{289950B9-603B-4B7B-A088-034F6C186D45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7289404A-25C3-48B9-8758-53F492B4A9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7289404A-25C3-48B9-8758-53F492B4A9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7289404A-25C3-48B9-8758-53F492B4A9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7289404A-25C3-48B9-8758-53F492B4A9AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,13 +1,13 @@
-using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Consumer;
+
 using EventStreamProcessing.Core;
 using EventStreamProcessing.Models;
-// using Microsoft.Azure.EventHubs;
-using Azure.Messaging.EventHubs;
-using Azure.Messaging.EventHubs.Processor;
-//using Microsoft.Azure.EventHubs.Processor;
+
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Azure.Messaging.EventHubs.Consumer;
+
+using System.Threading.Tasks;
 
 namespace EventStreamProcessing.Functions
 {

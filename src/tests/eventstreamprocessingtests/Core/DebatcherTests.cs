@@ -1,6 +1,4 @@
-using EventStreamProcessing.Helpers;
-using EventStreamProcessing.Models;
-using Microsoft.Azure.EventHubs;
+using Azure.Messaging.EventHubs;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -32,7 +30,7 @@ namespace EventStreamProcessingTests.Core
 
             // Assert
             Assert.Equal(messageCount, outputMessages.Count);
-            Assert.Equal(returnedSensors, outputMessages.Select(v => Encoding.UTF8.GetString(v.Body)));
+            Assert.Equal(returnedSensors, outputMessages.Select(v => Encoding.UTF8.GetString(v.EventBody)));
         }
 
 

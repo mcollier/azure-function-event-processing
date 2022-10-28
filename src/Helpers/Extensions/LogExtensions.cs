@@ -12,9 +12,9 @@ namespace EventStreamProcessing.Helpers.Extensions
             logger.LogInformation($"{functionName}: batchSize={batchSize}");
         }
 
-        public static void LogEventProcessed(this ILogger logger, string partitionId, EventData message){
+        public static void LogEventProcessed(this ILogger logger, string partitionId, EventData message)
+        {
             var processedTime = DateTime.UtcNow;
-            //var enqueuedTimeUtc = message.SystemProperties.EnqueuedTimeUtc;
             var enqueuedTimeUtc = message.EnqueuedTime;
             var debatchingLatencyInMs = TimeCalculations.GetLatency(enqueuedTimeUtc, processedTime);
 
@@ -32,7 +32,7 @@ namespace EventStreamProcessing.Helpers.Extensions
 
         public static void LogSensorProcessed(this ILogger logger, string sensorDataJson, string partitionId, DateTime processedTime, EventData message)
         {
-            var enqueuedTimeUtc = message.EnqueuedTime /*SystemProperties.EnqueuedTimeUtc*/;
+            var enqueuedTimeUtc = message.EnqueuedTime;
             DateTime inputEH_enqueuedTime = (DateTime)message.Properties["InputEH_EnqueuedTimeUtc"];
 
             var transformingLatencyInMs = TimeCalculations.GetLatency(enqueuedTimeUtc, processedTime);
@@ -44,7 +44,7 @@ namespace EventStreamProcessing.Helpers.Extensions
                 "transformingLatencyInMs={transformingLatencyInMs}, processingLatencyInMs={processingLatencyInMs}",
                 sensorDataJson,
                 partitionId,
-                message./*SystemProperties.*/Offset,
+                message.Offset,
                 enqueuedTimeUtc,
                 inputEH_enqueuedTime,
                 processedTime,
@@ -57,7 +57,7 @@ namespace EventStreamProcessing.Helpers.Extensions
             message.Properties.Add("error", exc?.Message);
             message.Properties.Add("stacktrace", exc?.StackTrace);
 
-            logger.LogError(exc, $"{functionName}: Failed processing message with partitionId={partitionId}, offset={message./*SystemProperties.*/Offset}");
+            logger.LogError(exc, $"{functionName}: Failed processing message with partitionId={partitionId}, offset={message.Offset}");
         }
 
         public static void LogProcessingComplete(this ILogger logger, string functionName, int originalMessageCount, int successfulMessageCount, string partitionId)
